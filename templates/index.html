@@ -1,18 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Sentiment Analysis</title>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Heading</title>
+    <style>
+      h1 {
+        text-align: center;
+      }
+    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Sentiment Analysis</h1>
-  <form action="/analyze" method="post">
-    <label for="statement">Enter a statement:</label>
-    <textarea id="statement" name="statement" required></textarea>
-    <input type="submit" value="Analyze Sentiment">
-  </form>
-  <div id="result"></div>
+    <div class="container">
+        <h1>Sentiment Analyzer</h1>
+        <form action="/predict" method="post" class="form">
+            <h3>Enter text:</h3>
+            <textarea id="text" name="text" rows="3" cols="100" placeholder="Type your text here..."></textarea>
+            <br>
+            <button type="submit" class="analyze-btn">Predict</button>
+        </form>
+        {% if text %}
+        <div class="result">
+            <h2>Sentiment of the your given statement is :</h2> <h3>{{ predicted_sentiment }}</h3>
+        </div>
+        {% endif %}
+    </div>
 
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="script.js"></script>
 </body>
 </html>
+
