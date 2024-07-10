@@ -1,34 +1,14 @@
 import streamlit as st
 import fasttext
 import re
+import requests
 
-model=fasttext.load_model("fasttext.bin")  # Replace with your model loading code
+FASTAPI_URL = "http://backend:8000/predict/"  # Replace with your actual FastAPI endpoint
 
-def predict_sentiment(model,text):
-    print(text)
-    sentence = re.sub(r'[^a-zA-Z0-9\s]', '', text)
-    sentence = sentence.lower()
-    print(f"The statement is: {sentence}")
-    prediction = model.predict(sentence)
-    length=len("__label__")
-
-    sentiment=prediction[0][0]
-    sentiment=sentiment[length:]
-    return sentiment
-
-def get_sentiment(text):
-    prediction = predict_sentiment(model, text)  
-    if prediction == 'positive':
-        emoji = '😊'
-        sentiment = 'Positive'
-    elif prediction == 'neutral':
-        emoji = '😐'
-        sentiment = 'Neutral'
-    else:
-        emoji = '😞'
-        sentiment = 'Negative'
-    return emoji, sentiment
-
+def get_sentiment_from_api(text):
+    response = requests.post(FASTAPI_URL, json={"text": text})
+    response_data = response.json()
+    return response_data["sentiment"], response_data["emoji"]
 
 st.title('Finment: Sentiment Analysis App')
 
@@ -37,5 +17,5 @@ st.write('Enter text below to predict its sentiment:')
 user_input = st.text_area('Text input', '')
 
 if user_input:
-    emoji, sentiment = get_sentiment(user_input)
+    sentiment, emoji = get_sentiment_from_api(user_input)
     st.write(f'Sentiment: {sentiment} {emoji}')
